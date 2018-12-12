@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="dzp" id="Project_4aebc6e" template="Default" database="MySql" >
+	<schema name="cursos" catalogname="cursos" >
+		<table name="actividad" >
+			<column name="id_actividad" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="nombre" type="varchar" length="64" jt="12" />
+			<column name="fecha_inicio" type="date" jt="91" />
+			<column name="fecha_finaliza" type="date" jt="91" />
+			<column name="no_parcial" type="int" jt="4" />
+			<column name="valor_parcial" type="int" jt="4" />
+			<column name="clave" type="varchar" length="12" jt="12" />
+			<column name="descripcion" type="text" jt="-1" />
+			<index name="pk_actividades_id_actividad" unique="PRIMARY_KEY" >
+				<column name="id_actividad" />
+			</index>
+			<index name="idx_actividades_clave" unique="NORMAL" >
+				<column name="clave" />
+			</index>
+			<fk name="fk_actividades_curso" to_schema="cursos" to_table="curso" >
+				<fk_column name="clave" pk="clave" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="alumno" >
+			<column name="correo" type="varchar" length="64" jt="12" mandatory="y" />
+			<column name="nombre" type="varchar" length="64" jt="12" />
+			<column name="apaterno" type="varchar" length="64" jt="12" />
+			<column name="amaterno" type="varchar" length="64" jt="12" />
+			<column name="clave" type="varchar" length="32" jt="12" />
+			<index name="pk_alumno_correo" unique="PRIMARY_KEY" >
+				<column name="correo" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="alumno_curso" >
+			<column name="id_alumno_curso" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="clave" type="varchar" length="12" jt="12" />
+			<column name="correo" type="varchar" length="64" jt="12" />
+			<index name="pk_alumno_curso_id_alumno_curso" unique="PRIMARY_KEY" >
+				<column name="id_alumno_curso" />
+			</index>
+			<index name="idx_alumno_curso_clave" unique="NORMAL" >
+				<column name="clave" />
+			</index>
+			<index name="idx_alumno_curso_correo" unique="NORMAL" >
+				<column name="correo" />
+			</index>
+			<fk name="fk_alumno_curso_curso" to_schema="cursos" to_table="curso" >
+				<fk_column name="clave" pk="clave" />
+			</fk>
+			<fk name="fk_alumno_curso_alumno" to_schema="cursos" to_table="alumno" >
+				<fk_column name="correo" pk="correo" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="aviso" >
+			<column name="id_aviso" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="aviso" type="text" length="250" jt="-1" />
+			<column name="fecha" type="datetime" jt="93" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
+			<column name="clave" type="varchar" length="12" jt="12" />
+			<index name="pk_aviso_id_aviso" unique="PRIMARY_KEY" >
+				<column name="id_aviso" />
+			</index>
+			<index name="idx_aviso_clave" unique="NORMAL" >
+				<column name="clave" />
+			</index>
+			<fk name="fk_aviso_curso" to_schema="cursos" to_table="curso" >
+				<fk_column name="clave" pk="clave" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="curso" >
+			<column name="clave" type="varchar" length="12" jt="12" mandatory="y" />
+			<column name="curso" type="varchar" length="64" jt="12" />
+			<column name="fecha" type="datetime" jt="93" />
+			<column name="correo" type="varchar" length="64" jt="12" />
+			<index name="pk_curso_clave" unique="PRIMARY_KEY" >
+				<column name="clave" />
+			</index>
+			<index name="idx_curso_id_maestro" unique="NORMAL" >
+				<column name="correo" />
+			</index>
+			<fk name="fk_curso_maestro" to_schema="cursos" to_table="maestro" >
+				<fk_column name="correo" pk="correo" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="entrega" >
+			<column name="id_entrega" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="correo" type="varchar" length="64" jt="12" />
+			<column name="id_actividad" type="int" jt="4" />
+			<column name="fecha" type="datetime" jt="93" />
+			<column name="archivo" type="varchar" length="64" jt="12" />
+			<column name="calificacion" type="int" jt="4" />
+			<index name="pk_entregas_id_entrega" unique="PRIMARY_KEY" >
+				<column name="id_entrega" />
+			</index>
+			<index name="idx_entregas_correo" unique="NORMAL" >
+				<column name="correo" />
+			</index>
+			<index name="idx_entrega_id_actividad" unique="NORMAL" >
+				<column name="id_actividad" />
+			</index>
+			<fk name="fk_entregas_alumno" to_schema="cursos" to_table="alumno" >
+				<fk_column name="correo" pk="correo" />
+			</fk>
+			<fk name="fk_entrega_actividad" to_schema="cursos" to_table="actividad" >
+				<fk_column name="id_actividad" pk="id_actividad" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="maestro" >
+			<column name="nombre" type="varchar" length="64" jt="12" />
+			<column name="apaterno" type="varchar" length="64" jt="12" />
+			<column name="amaterno" type="varchar" length="64" jt="12" />
+			<column name="nombre_escuela" type="varchar" length="128" jt="12" />
+			<column name="correo" type="varchar" length="64" jt="12" mandatory="y" />
+			<column name="clave" type="varchar" length="32" jt="12" />
+			<index name="pk_maestro_correo" unique="PRIMARY_KEY" >
+				<column name="correo" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="recurso" >
+			<column name="id_recurso" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="recurso" type="varchar" length="64" jt="12" mandatory="y" />
+			<column name="fecha" type="datetime" jt="93" />
+			<column name="descripcion" type="text" jt="-1" />
+			<column name="clave" type="varchar" length="12" jt="12" />
+			<index name="pk_recurso_id_recurso" unique="PRIMARY_KEY" >
+				<column name="id_recurso" />
+			</index>
+			<index name="idx_recurso_clave" unique="NORMAL" >
+				<column name="clave" />
+			</index>
+			<fk name="fk_recurso_curso" to_schema="cursos" to_table="curso" >
+				<fk_column name="clave" pk="clave" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+	</schema>
+	<connector name="dzp" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-5.1.46.jar" driver_desc="Standard" host="localhost" port="3306" instance="cursos" user="root" />
+	<connector name="dzp" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-5.1.46.jar" driver_desc="Standard" host="localhost" port="3306" instance="Cursos" user="root" passwd="dG9vcg==" />
+	<layout name="Default Layout" id="Layout_4fe93a4" show_relation="columns" >
+		<entity schema="cursos" name="recurso" color="C1D8EE" x="192" y="608" />
+		<entity schema="cursos" name="curso" color="C1D8EE" x="304" y="432" />
+		<entity schema="cursos" name="aviso" color="C1D8EE" x="96" y="432" />
+		<entity schema="cursos" name="maestro" color="C1D8EE" x="160" y="160" />
+		<entity schema="cursos" name="alumno" color="C1D8EE" x="656" y="160" />
+		<entity schema="cursos" name="alumno_curso" color="C1D8EE" x="368" y="176" />
+		<entity schema="cursos" name="entrega" color="C1D8EE" x="656" y="368" />
+		<entity schema="cursos" name="actividad" color="C1D8EE" x="480" y="560" />
+		<callout x="48" y="48" pointer="NO" >
+			<comment><![CDATA[Create new tables by right-clicking the layout, new foreign keys by drag and drop of one column over a primary key column.
+For a better design create multiple layouts (diagrams) with the same or different tables.
+Right-click any table header to start Relational Data Browse (very useful) or other tools.]]></comment>
+		</callout>
+	</layout>
+</project>
